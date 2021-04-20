@@ -5,37 +5,32 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "bintree.h"
+#include "Arbin.h"
+#include "List.h"
 
 // función que resuelve el problema
-void resolver(bintree<int> arbol, bool &control) {
-    
-    if (arbol.left().empty() && arbol.right().empty()) {
-        if (!control) {
-            std::cout << arbol.root();
-            control = true;
-        }
-        else {
-            std::cout << " " << arbol.root();
-        }
+void resolver(Arbin<int> arbol, List<int> &lista) {
+
+    if (arbol.hijoIz().esVacio() && arbol.hijoDr().esVacio()) {
+        lista.push_back(arbol.raiz());
     }
     else {
-        if(!arbol.left().empty())
-            resolver(arbol.left(), control);
-        if (!arbol.right().empty())
-            resolver(arbol.right(), control);
+        if(!arbol.hijoIz().esVacio())
+            resolver(arbol.hijoIz(), lista);
+        if (!arbol.hijoDr().esVacio())
+            resolver(arbol.hijoDr(), lista);
     }
 }
 
-bintree<int> leerArbol(const int& repVacio) {
+Arbin<int> leerArbol(const int& repVacio) {
     int elem;
     std::cin >> elem;
     if (elem == repVacio)
-        return bintree<int>();
+        return Arbin<int>();
     else {
-        bintree<int> hi = leerArbol(repVacio);
-        bintree<int> hd = leerArbol(repVacio);
-        return bintree<int>(hi, elem, hd);
+        Arbin<int> hi = leerArbol(repVacio);
+        Arbin<int> hd = leerArbol(repVacio);
+        return Arbin<int>(hi, elem, hd);
     }
 }
 
@@ -43,14 +38,23 @@ bintree<int> leerArbol(const int& repVacio) {
 // configuración, y escribiendo la respuesta
 void resuelveCaso() {
     // leer los datos de la entrada
-    bintree<int> arbol = leerArbol(-1);
-    bool control = false;
-    if (arbol.empty()) {
-        std::cout << endl;
+    Arbin<int> arbol = leerArbol(-1);
+    List<int> lista;
+
+    if (arbol.esVacio()) {
+        std::cout << std::endl;
     }
     else {
-        resolver(arbol, control);
-        std::cout << endl;
+        resolver(arbol, lista);
+
+        List<int>::Iterator it = lista.begin();
+        while (it != lista.end()) {
+            if (it != lista.begin())
+                std::cout << " ";
+            std::cout << it.elem();
+            it.next();
+        }
+        std::cout << std::endl;
     }
 }
 
